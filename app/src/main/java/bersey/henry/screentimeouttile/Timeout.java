@@ -2,6 +2,8 @@ package bersey.henry.screentimeouttile;
 
 import android.content.res.Resources;
 
+import androidx.annotation.Nullable;
+
 public class Timeout {
     public static final Timeout NEVER = new Timeout(-1, Unit.SECONDS, true);
 
@@ -25,7 +27,7 @@ public class Timeout {
     }
 
     public String getLonghand(Resources res) {
-        return never ? res.getString(R.string.never) : (amount + " " +  unit.getLonghand(res));
+        return never ? res.getString(R.string.never) : (amount + " " + unit.getLonghand(res));
     }
 
     public int getAmount() {
@@ -77,4 +79,13 @@ public class Timeout {
         }
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Timeout))
+            return false;
+
+        Timeout other = (Timeout) obj;
+
+        return other.never == never && other.getMS() == getMS();
+    }
 }

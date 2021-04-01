@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+
         Spinner languageSpinner = findViewById(R.id.languageSpinner);
         List<String> languages = Arrays.stream(
                 getResources().getStringArray(R.array.language_codes))
@@ -35,13 +39,27 @@ public class MainActivity extends AppCompatActivity {
         languageSpinner.setAdapter(languageSpinnerAdapter);
 
         RecyclerView timeoutsRecyclerView = findViewById(R.id.timeoutsRecyclerView);
-        timeoutsRecyclerView.setAdapter(new TimeoutsRecyclerAdapter());
+        TimeoutsRecyclerAdapter timeoutsRecyclerAdapter = new TimeoutsRecyclerAdapter();
+        timeoutsRecyclerView.setAdapter(timeoutsRecyclerAdapter);
         timeoutsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        EditText newTimeoutEditText = findViewById(R.id.newTimeoutAmount);
 
         Spinner newUnitSpinner = findViewById(R.id.newTimeoutUnitSpinner);
         List<String> units = Arrays.stream(Timeout.Unit.values()).map(unit -> unit.getShorthand(getResources())).collect(Collectors.toList());
         ArrayAdapter<String> newUnitAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, units);
         newUnitSpinner.setAdapter(newUnitAdapter);
+
+        ImageButton newButton = findViewById(R.id.newTimeoutButton);
+        newButton.setOnClickListener(v -> {
+            int amount = Integer.parseInt(newTimeoutEditText.getText().toString());
+            Timeout.Unit unit = Timeout.Unit.values()[newUnitSpinner.getSelectedItemPosition()];
+            Timeout timeout = new Timeout(amount, unit);
+            if (!timeoutManager.alreadyExists(timeout)) {
+                int i = timeoutManager.add(timeout);
+                timeoutsRecyclerAdapter.notifyItemInserted(i);
+            }
+        });
 
     }
 

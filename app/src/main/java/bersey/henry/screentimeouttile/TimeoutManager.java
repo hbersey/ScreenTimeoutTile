@@ -3,6 +3,7 @@ package bersey.henry.screentimeouttile;
 import android.content.ContentResolver;
 import android.provider.Settings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,17 +19,17 @@ public class TimeoutManager {
     }
 
 
-    private List<Timeout> timeouts;
+    private ArrayList<Timeout> timeouts;
     private int currentIndex;
 
     // REPLACE ME!
     private TimeoutManager() {
-        this.timeouts = Arrays.asList(
+        this.timeouts = new ArrayList<>(Arrays.asList(
                 new Timeout(30, Timeout.Unit.SECONDS),
                 new Timeout(60, Timeout.Unit.SECONDS),
                 new Timeout(2, Timeout.Unit.MINUTE),
                 Timeout.NEVER
-        );
+        ));
         this.currentIndex = 0;
     }
 
@@ -71,6 +72,18 @@ public class TimeoutManager {
 
     public Timeout get(int i) {
         return timeouts.get(i);
+    }
+
+    public boolean alreadyExists(Timeout timeout) {
+        return timeouts.contains(timeout);
+    }
+
+    public int add(Timeout timeout) {
+        int i = 0;
+        while (i < timeouts.size() - 1 && timeout.getMS() > timeouts.get(i).getMS())
+            i++;
+        timeouts.add(i, timeout);
+        return i;
     }
 
 }
