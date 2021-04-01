@@ -42,6 +42,13 @@ public class TimeoutTileService extends TileService {
         return Icon.createWithBitmap(bitmap);
     }
 
+    private void updateTile(Tile tile, Timeout timeout) {
+        String iconText = timeout.getShorthand(getResources());
+        tile.setState(timeout.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
+        tile.setIcon(generateIcon(iconText));
+        tile.updateTile();
+    }
+
     @Override
     public void onStartListening() {
         Tile tile = getQsTile();
@@ -50,11 +57,7 @@ public class TimeoutTileService extends TileService {
 
         TimeoutManager timeoutManager = TimeoutManager.getInstance();
         Timeout timeout = timeoutManager.getCurrent();
-        String iconText = timeout.getShorthand(getResources());
-
-        tile.setState(timeout.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
-        tile.setIcon(generateIcon(iconText)); // Get from current timeout
-        tile.updateTile();
+        updateTile(tile, timeout);
     }
 
     @Override
@@ -65,11 +68,8 @@ public class TimeoutTileService extends TileService {
 
         TimeoutManager timeoutManager = TimeoutManager.getInstance();
         Timeout next = timeoutManager.getNext();
-        String iconText = next.getShorthand(getResources());
 
-        tile.setState(next.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
-        tile.setIcon(generateIcon(iconText)); // Get from current timeout
-        tile.updateTile();
+        updateTile(tile, next);
 
         timeoutManager.setNext();
         if (!Settings.System.canWrite(this)) {
@@ -78,6 +78,5 @@ public class TimeoutTileService extends TileService {
             startActivity(intent);
         } else
             timeoutManager.applySettings(getContentResolver());
-
     }
 }
