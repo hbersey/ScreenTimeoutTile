@@ -31,7 +31,7 @@ public class TimeoutManager {
                 new Timeout(2, Timeout.Unit.MINUTE)
         ));
         this.currentIndex = 0;
-        this.neverEnabled = false;
+        this.neverEnabled = true;
     }
 
 
@@ -76,5 +76,9 @@ public class TimeoutManager {
 
     public boolean isNeverEnabled() {
         return neverEnabled;
+    }
+
+    public void setNeverEnabled(boolean neverEnabled) {
+        this.neverEnabled = neverEnabled;
     }
 }

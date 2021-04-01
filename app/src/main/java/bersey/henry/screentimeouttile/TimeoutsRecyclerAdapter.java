@@ -1,10 +1,8 @@
 package bersey.henry.screentimeouttile;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,6 +32,7 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
             holder.textView.setText(holder.itemView.getContext().getString(R.string.never));
             holder.deleteButton.setVisibility(View.GONE);
             holder.checkBox.setChecked(timeoutManager.isNeverEnabled());
+            holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> timeoutManager.setNeverEnabled(isChecked));
         } else {
             Timeout timeout = timeoutManager.get(position);
             holder.textView.setText(timeout.getLonghand(holder.itemView.getContext().getResources()));
