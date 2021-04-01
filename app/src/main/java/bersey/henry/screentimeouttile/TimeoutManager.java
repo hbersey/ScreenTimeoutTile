@@ -1,5 +1,8 @@
 package bersey.henry.screentimeouttile;
 
+import android.content.ContentResolver;
+import android.provider.Settings;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class TimeoutManager {
         return currentIndex + 1;
     }
 
-    public Timeout getCurrent () {
+    public Timeout getCurrent() {
         return timeouts.get(currentIndex);
     }
 
@@ -56,5 +59,8 @@ public class TimeoutManager {
         currentIndex = nextIndex();
     }
 
+    public void applySettings(ContentResolver cr) {
+        Settings.System.putLong(cr, Settings.System.SCREEN_OFF_TIMEOUT, getCurrent().getMS());
+    }
 
 }
