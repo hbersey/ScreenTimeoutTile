@@ -28,14 +28,15 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Timeout timeout = timeoutManager.get(position);
+        boolean isLast = timeoutManager.getTimeouts().size() == position;
 
-        holder.textView.setText(timeout.getLonghand(holder.itemView.getContext().getResources()));
-
-        if (timeout.isNever()) {
+        if (isLast) {
+            holder.textView.setText(holder.itemView.getContext().getString(R.string.never));
             holder.deleteButton.setVisibility(View.GONE);
-            holder.checkBox.setChecked(true);
+            holder.checkBox.setChecked(timeoutManager.isNeverEnabled());
         } else {
+            Timeout timeout = timeoutManager.get(position);
+            holder.textView.setText(timeout.getLonghand(holder.itemView.getContext().getResources()));
             holder.checkBox.setVisibility(View.GONE);
             holder.deleteButton.setOnClickListener(v -> {
                 timeoutManager.removeAt(position);
@@ -48,7 +49,7 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
     @Override
     public int getItemCount() {
         TimeoutManager timeoutManager = TimeoutManager.getInstance();
-        return timeoutManager.getTimeouts().size();
+        return timeoutManager.getTimeouts().size() + 1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -5,29 +5,22 @@ import android.content.res.Resources;
 import androidx.annotation.Nullable;
 
 public class Timeout {
-    public static final Timeout NEVER = new Timeout(-1, Unit.SECONDS, true);
-
     private int amount;
     private Unit unit;
-    private final boolean never;
+
 
     public Timeout(int amount, Unit unit) {
-        this(amount, unit, false);
-    }
-
-    private Timeout(int amount, Unit unit, boolean never) {
         this.amount = amount;
         this.unit = unit;
-        this.never = never;
     }
 
 
     public String getShorthand(Resources res) {
-        return never ? res.getString(R.string.never) : (amount + unit.getShorthand(res));
+        return amount + unit.getShorthand(res);
     }
 
     public String getLonghand(Resources res) {
-        return never ? res.getString(R.string.never) : (amount + " " + unit.getLonghand(res));
+        return amount + " " + unit.getLonghand(res);
     }
 
     public int getAmount() {
@@ -50,9 +43,6 @@ public class Timeout {
         return this.unit.ms * amount;
     }
 
-    public boolean isNever() {
-        return never;
-    }
 
     enum Unit {
         SECONDS(1000, R.string.seconds_short, R.string.seconds_long),
@@ -86,6 +76,6 @@ public class Timeout {
 
         Timeout other = (Timeout) obj;
 
-        return other.never == never && other.getMS() == getMS();
+        return other.getMS() == getMS();
     }
 }

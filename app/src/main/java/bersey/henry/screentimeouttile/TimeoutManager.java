@@ -21,49 +21,33 @@ public class TimeoutManager {
 
     private ArrayList<Timeout> timeouts;
     private int currentIndex;
+    private boolean neverEnabled;
 
     // REPLACE ME!
     private TimeoutManager() {
         this.timeouts = new ArrayList<>(Arrays.asList(
                 new Timeout(30, Timeout.Unit.SECONDS),
                 new Timeout(60, Timeout.Unit.SECONDS),
-                new Timeout(2, Timeout.Unit.MINUTE),
-                Timeout.NEVER
+                new Timeout(2, Timeout.Unit.MINUTE)
         ));
         this.currentIndex = 0;
+        this.neverEnabled = false;
     }
 
-    private int previousIndex() {
-        if (currentIndex <= 0)
-            return timeouts.size() - 1;
-        return currentIndex - 1;
-    }
 
-    private int nextIndex() {
-        if (currentIndex >= timeouts.size() - 1)
+    public int getNextIndex() {
+        if (currentIndex >= timeouts.size() - (neverEnabled ? 0 : 1))
             return 0;
         return currentIndex + 1;
     }
 
-    public Timeout getCurrent() {
-        return timeouts.get(currentIndex);
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 
-    public Timeout getPrevious() {
-        return timeouts.get(previousIndex());
-    }
 
-    public Timeout getNext() {
-        return timeouts.get(nextIndex());
-    }
-
-    public void setNext() {
-        currentIndex = nextIndex();
-    }
-
-    public void applySettings(ContentResolver cr) {
-        Timeout timeout = getCurrent();
-        Settings.System.putLong(cr, Settings.System.SCREEN_OFF_TIMEOUT, timeout.isNever() ? Integer.MAX_VALUE : timeout.getMS());
+    public void next() {
+        currentIndex = getNextIndex();
     }
 
     public List<Timeout> getTimeouts() {
@@ -80,7 +64,7 @@ public class TimeoutManager {
 
     public int add(Timeout timeout) {
         int i = 0;
-        while (i < timeouts.size() - 1 && timeout.getMS() > timeouts.get(i).getMS())
+        while (i < timeouts.size() && timeout.getMS() > timeouts.get(i).getMS())
             i++;
         timeouts.add(i, timeout);
         return i;
@@ -90,5 +74,7 @@ public class TimeoutManager {
         timeouts.remove(i);
     }
 
-
+    public boolean isNeverEnabled() {
+        return neverEnabled;
+    }
 }

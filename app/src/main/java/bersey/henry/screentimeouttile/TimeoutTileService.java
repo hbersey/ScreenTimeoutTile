@@ -9,6 +9,7 @@ import android.graphics.drawable.Icon;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.util.Log;
 
 public class TimeoutTileService extends TileService {
 
@@ -42,12 +43,16 @@ public class TimeoutTileService extends TileService {
         return Icon.createWithBitmap(bitmap);
     }
 
-    private void updateTile(Tile tile, Timeout timeout) {
-        String iconText = timeout.getShorthand(getResources());
-        tile.setState(timeout.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
-        tile.setIcon(generateIcon(iconText));
+    private void updateTile(Tile tile, Timeout timeout, boolean isNever) {
+        tile.setState(isNever ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
+        tile.setIcon(generateIcon(isNever ? getString(R.string.never) : timeout.getShorthand(getResources())));
         tile.updateTile();
     }
+
+    public void applyTimeout(long ms) {
+        Settings.System.putLong(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, ms);
+    }
+
 
     @Override
     public void onStartListening() {
@@ -56,8 +61,11 @@ public class TimeoutTileService extends TileService {
             return;
 
         TimeoutManager timeoutManager = TimeoutManager.getInstance();
-        Timeout timeout = timeoutManager.getCurrent();
-        updateTile(tile, timeout);
+        int i = timeoutManager.getCurrentIndex();
+        if (timeoutManager.isNeverEnabled() && i == timeoutManager.getTimeouts().size())
+            updateTile(tile, null, true);
+        else
+            updateTile(tile, timeoutManager.get(i), false);
     }
 
     @Override
@@ -66,17 +74,27 @@ public class TimeoutTileService extends TileService {
         if (tile == null)
             return;
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance();
-        Timeout next = timeoutManager.getNext();
-
-        updateTile(tile, next);
-
-        timeoutManager.setNext();
         if (!Settings.System.canWrite(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        } else
-            timeoutManager.applySettings(getContentResolver());
+            return;
+        }
+
+        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        int next = timeoutManager.getNextIndex();
+        boolean isNever = timeoutManager.isNeverEnabled() && next == timeoutManager.getTimeouts().size();
+
+        if (isNever) {
+            applyTimeout(Integer.MAX_VALUE);
+            updateTile(tile, null, true);
+        } else {
+            Timeout timeout = timeoutManager.get(next);
+            applyTimeout(timeout.getMS());
+            updateTile(tile, timeout, false);
+        }
+
+        timeoutManager.next();
+
     }
 }
