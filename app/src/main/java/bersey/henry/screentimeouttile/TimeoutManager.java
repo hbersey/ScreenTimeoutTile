@@ -65,4 +65,12 @@ public class TimeoutManager {
         Settings.System.putLong(cr, Settings.System.SCREEN_OFF_TIMEOUT, timeout.isNever() ? Integer.MAX_VALUE : timeout.getMS());
     }
 
+    public List<Timeout> getTimeouts() {
+        return timeouts;
+    }
+
+    public Timeout get(int i) {
+        return timeouts.get(i);
+    }
+
 }

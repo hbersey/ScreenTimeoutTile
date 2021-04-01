@@ -25,7 +25,7 @@ public class Timeout {
     }
 
     public String getLonghand(Resources res) {
-        return never ? res.getString(R.string.never) : (amount + unit.getLonghand(res));
+        return never ? res.getString(R.string.never) : (amount + " " +  unit.getLonghand(res));
     }
 
     public int getAmount() {

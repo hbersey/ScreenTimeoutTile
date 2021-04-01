@@ -11,6 +11,13 @@
     <string name="hours_long">hours</string>
     <string name="never">Never</string>
 
+    <string name="language">Language:</string>
+    <string name="auto">auto</string>
+    <string name="presets">Presets:</string>
+    <string name="new_">New</string>
+    <string name="other">Other:</string>
+    <string name="notifications">Notifications</string>
+
     <string name="developer">Developer: Henry Bersey</string>
     <string name="translators">Translators:</string>
 
