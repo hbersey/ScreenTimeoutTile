@@ -37,6 +37,10 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
             holder.checkBox.setChecked(true);
         } else {
             holder.checkBox.setVisibility(View.GONE);
+            holder.deleteButton.setOnClickListener(v -> {
+                timeoutManager.removeAt(position);
+                notifyItemRemoved(position);
+            });
         }
 
     }

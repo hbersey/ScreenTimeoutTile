@@ -86,4 +86,9 @@ public class TimeoutManager {
         return i;
     }
 
+    public void removeAt(int i) {
+        timeouts.remove(i);
+    }
+
+
 }
