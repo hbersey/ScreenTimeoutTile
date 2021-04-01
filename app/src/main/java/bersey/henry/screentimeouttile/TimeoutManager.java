@@ -40,12 +40,20 @@ public class TimeoutManager {
         return currentIndex + 1;
     }
 
-    public Timeout previous() {
+    public Timeout getCurrent () {
+        return timeouts.get(currentIndex);
+    }
+
+    public Timeout getPrevious() {
         return timeouts.get(previousIndex());
     }
 
-    public Timeout next() {
+    public Timeout getNext() {
         return timeouts.get(nextIndex());
+    }
+
+    public void setNext() {
+        currentIndex = nextIndex();
     }
 
 

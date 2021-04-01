@@ -46,10 +46,29 @@ public class TimeoutTileService extends TileService {
         if (tile == null)
             return;
 
+        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        Timeout timeout = timeoutManager.getCurrent();
+        String iconText = timeout.getShorthand(getResources());
 
         tile.setState(Tile.STATE_ACTIVE); // If timeout != never
-        tile.setIcon(generateIcon("30s")); // Get from current timeout
+        tile.setIcon(generateIcon(iconText)); // Get from current timeout
+        tile.updateTile();
+    }
+
+    @Override
+    public void onClick() {
+        Tile tile = getQsTile();
+        if (tile == null)
+            return;
+
+        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        Timeout next = timeoutManager.getNext();
+        String iconText = next.getShorthand(getResources());
+
+        tile.setState(Tile.STATE_ACTIVE); // If timeout != never
+        tile.setIcon(generateIcon(iconText)); // Get from current timeout
         tile.updateTile();
 
+        timeoutManager.setNext();
     }
 }
