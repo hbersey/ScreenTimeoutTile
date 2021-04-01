@@ -3,20 +3,29 @@ package bersey.henry.screentimeouttile;
 import android.content.res.Resources;
 
 public class Timeout {
+    public static final Timeout NEVER = new Timeout(-1, Unit.SECONDS, true);
+
     private int amount;
     private Unit unit;
+    private final boolean never;
 
     public Timeout(int amount, Unit unit) {
-        this.amount = amount;
-        this.unit = unit;
+        this(amount, unit, false);
     }
 
+    private Timeout(int amount, Unit unit, boolean never) {
+        this.amount = amount;
+        this.unit = unit;
+        this.never = never;
+    }
+
+
     public String getShorthand(Resources res) {
-        return amount + unit.getShorthand(res);
+        return never ? res.getString(R.string.never) : (amount + unit.getShorthand(res));
     }
 
     public String getLonghand(Resources res) {
-        return amount + unit.getLonghand(res);
+        return never ? res.getString(R.string.never) : (amount + unit.getLonghand(res));
     }
 
     public int getAmount() {
@@ -37,6 +46,10 @@ public class Timeout {
 
     public long getMS() {
         return this.unit.ms * amount;
+    }
+
+    public boolean isNever() {
+        return never;
     }
 
     enum Unit {

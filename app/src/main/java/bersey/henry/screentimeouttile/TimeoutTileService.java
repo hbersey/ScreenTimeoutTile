@@ -52,7 +52,7 @@ public class TimeoutTileService extends TileService {
         Timeout timeout = timeoutManager.getCurrent();
         String iconText = timeout.getShorthand(getResources());
 
-        tile.setState(Tile.STATE_ACTIVE); // If timeout != never
+        tile.setState(timeout.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
         tile.setIcon(generateIcon(iconText)); // Get from current timeout
         tile.updateTile();
     }
@@ -67,7 +67,7 @@ public class TimeoutTileService extends TileService {
         Timeout next = timeoutManager.getNext();
         String iconText = next.getShorthand(getResources());
 
-        tile.setState(Tile.STATE_ACTIVE); // If timeout != never
+        tile.setState(next.isNever() ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
         tile.setIcon(generateIcon(iconText)); // Get from current timeout
         tile.updateTile();
 

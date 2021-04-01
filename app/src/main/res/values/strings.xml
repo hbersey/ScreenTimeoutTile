@@ -7,4 +7,5 @@
     <string name="minutes_long">minutes</string>
     <string name="hours_short">h</string>
     <string name="hours_long">hours</string>
+    <string name="never">Never</string>
 </resources>

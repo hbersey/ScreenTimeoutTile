@@ -26,7 +26,8 @@ public class TimeoutManager {
         this.timeouts = Arrays.asList(
                 new Timeout(30, Timeout.Unit.SECONDS),
                 new Timeout(60, Timeout.Unit.SECONDS),
-                new Timeout(2, Timeout.Unit.MINUTE)
+                new Timeout(2, Timeout.Unit.MINUTE),
+                Timeout.NEVER
         );
         this.currentIndex = 0;
     }
@@ -60,7 +61,8 @@ public class TimeoutManager {
     }
 
     public void applySettings(ContentResolver cr) {
-        Settings.System.putLong(cr, Settings.System.SCREEN_OFF_TIMEOUT, getCurrent().getMS());
+        Timeout timeout = getCurrent();
+        Settings.System.putLong(cr, Settings.System.SCREEN_OFF_TIMEOUT, timeout.isNever() ? Integer.MAX_VALUE : timeout.getMS());
     }
 
 }
