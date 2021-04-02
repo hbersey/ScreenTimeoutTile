@@ -73,12 +73,20 @@ public class TimeoutTileService extends TileService {
             return;
 
         TimeoutManager timeoutManager = TimeoutManager.getInstance(preferences);
-        String timeout = timeoutManager.get(timeoutManager.getCurrentIndex()).getLonghand(context.getResources());
+        int i = timeoutManager.getCurrentIndex();
+
+        String content;
+        if (timeoutManager.isNeverEnabled() && i == timeoutManager.getTimeouts().size())
+            content = String.format(context.getString(R.string.notification_content), "\"" + context.getString(R.string.never) + "\"");
+        else {
+            String timeout = timeoutManager.get(i).getLonghand(context.getResources());
+            content = String.format(context.getString(R.string.notification_content), timeout);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationUtils.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(context.getString(R.string.notification_title))
-                .setContentText(String.format(context.getString(R.string.notification_content), timeout))
+                .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
