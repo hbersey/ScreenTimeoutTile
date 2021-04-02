@@ -39,8 +39,12 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
             holder.textView.setText(timeout.getLonghand(holder.itemView.getContext().getResources()));
             holder.checkBox.setVisibility(View.GONE);
             holder.deleteButton.setOnClickListener(v -> {
-                timeoutManager.removeAt(position);
-                notifyItemRemoved(position);
+                if (timeoutManager.getTimeouts().size() <= 1)
+                    return;
+
+                // Index may have changed
+                int i = timeoutManager.remove(timeout);
+                notifyItemRemoved(i);
             });
         }
 

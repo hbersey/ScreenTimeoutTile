@@ -1,7 +1,10 @@
 package bersey.henry.screentimeouttile;
 
 import android.content.SharedPreferences;
+import android.os.Debug;
+import android.util.Log;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,10 +75,7 @@ public class TimeoutManager {
         return currentIndex + 1;
     }
 
-    // Temporary fix to deletion issues.
     public int getCurrentIndex() {
-        if (currentIndex > timeouts.size() - (neverEnabled ? 0 : 1))
-            return timeouts.size() - (neverEnabled ? 0 : 1);
         return currentIndex;
     }
 
@@ -101,11 +101,23 @@ public class TimeoutManager {
         while (i < timeouts.size() && timeout.getMS() > timeouts.get(i).getMS())
             i++;
         timeouts.add(i, timeout);
+
+        if (i <= currentIndex)
+            currentIndex++;
+
         return i;
     }
 
-    public void removeAt(int i) {
+    public int remove(Timeout timeout) {
+        int i = timeouts.indexOf(timeout);
+
+        Log.d("REMOVE AT", String.valueOf(i));
+
         timeouts.remove(i);
+        if (i <= currentIndex)
+            currentIndex--;
+
+        return i;
     }
 
     public boolean isNeverEnabled() {
