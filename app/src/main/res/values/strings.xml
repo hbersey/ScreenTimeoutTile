@@ -26,5 +26,6 @@
 
     <string name="language_fr">French</string>
     <string name="language_en">English</string>
+    <string name="language_it">Italian</string>
     <string name="language_ru">Russian</string>
 </resources>
