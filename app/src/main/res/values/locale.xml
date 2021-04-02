@@ -3,7 +3,7 @@
     <string-array name="language_codes">
         <item>fr</item>
         <item>en</item>
-        <item>it</item>
+<!--        <item>it</item>-->
         <item>ru</item>
     </string-array>
 
@@ -11,7 +11,7 @@
         <item>Thomas Gould</item>
         <!--suppress CheckTagEmptyBody -->
         <item></item>
-        <item>Riccardo Boiteux</item>
+<!--        <item>Riccardo Boiteux</item>-->
         <item>Alina Evstigneeva</item>
     </string-array>
 

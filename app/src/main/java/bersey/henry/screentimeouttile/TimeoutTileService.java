@@ -19,6 +19,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import bersey.henry.screentimeouttile.utils.NotificationUtils;
 
+import static bersey.henry.screentimeouttile.utils.LocaleUtils.updateLanguage;
+
 public class TimeoutTileService extends TileService {
 
     private static final int TEXT_COLOUR = Color.BLACK;
@@ -89,7 +91,8 @@ public class TimeoutTileService extends TileService {
         if (tile == null)
             return;
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(preferences);
         int i = timeoutManager.getCurrentIndex();
         if (timeoutManager.isNeverEnabled() && i == timeoutManager.getTimeouts().size())
             updateTile(tile, null, true);
@@ -97,6 +100,7 @@ public class TimeoutTileService extends TileService {
             updateTile(tile, timeoutManager.get(i), false);
 
         NotificationUtils.createNotificationChannel(this);
+        updateLanguage(preferences, this);
     }
 
     @Override
