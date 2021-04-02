@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Screen Timeout Tile</string>
+    <string name="tile_label">Экранное время</string>
+    <string name="notification_content">Ваше экранное время сейчас %s.</string>
+    <string name="language">Язык:</string>
+    <string name="auto">автоматически</string>
+    <string name="presets">Установки:</string>
+    <string name="new_">Новый</string>
+    <string name="other">Другие:</string>
+    <string name="notifications">Уведомления</string>
+    <string name="about">О</string>
+    <string name="seconds_short">с</string>
+    <string name="seconds_long">секунды</string>
+    <string name="minutes_short">м</string>
+    <string name="minutes_long">минут</string>
+    <string name="hours_long">часы</string>
+    <string name="hours_short">ч</string>
+    <string name="never">Никогда</string>
+    <string name="notification_title">Экранное время изменило</string>
+    <string name="developer">Разработчик: Henry Bersey</string>
+    <string name="translators">Переводчики:</string>
+    <string name="language_fr">французский</string>
+    <string name="language_en">Aнглийский</string>
+    <string name="language_it">Итальянский</string>
+    <string name="language_ru">Pусский</string>
+</resources>

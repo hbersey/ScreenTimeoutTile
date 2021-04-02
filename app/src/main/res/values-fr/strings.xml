@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vignette de Veille d\'écran</string>
+    <string name="language_fr">Français</string>
+    <string name="seconds_long">secondes</string>
+    <string name="seconds_short">s</string>
+    <string name="minutes_short">m</string>
+    <string name="minutes_long">minutes</string>
+    <string name="hours_long">heures</string>
+    <string name="hours_short">h</string>
+    <string name="notification_content">Votre veille d\'écran est maintenant %s.</string>
+    <string name="language">Langue:</string>
+    <string name="auto">auto</string>
+    <string name="presets">Préconfigurations:</string>
+    <string name="language_en">Anglais</string>
+    <string name="language_it">Italien</string>
+    <string name="language_ru">Russe</string>
+    <string name="tile_label">Veille d\'écran</string>
+    <string name="about">" À propos"</string>
+    <string name="never">Jamais</string>
+    <string name="notification_title">Veille d\'écran modifié</string>
+    <string name="new_">Nouveau</string>
+    <string name="other">Autre:</string>
+    <string name="developer">Développeur: Henry Bersey</string>
+    <string name="translators">Traducteurs:</string>
+    <string name="notifications">Notifications</string>
+</resources>
