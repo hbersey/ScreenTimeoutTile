@@ -1,6 +1,8 @@
 package bersey.henry.screentimeouttile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +13,11 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import bersey.henry.screentimeouttile.utils.NotificationUtils;
 
 public class TimeoutTileService extends TileService {
 
@@ -57,6 +64,25 @@ public class TimeoutTileService extends TileService {
     }
 
 
+    private static void sendNotification(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if (!preferences.getBoolean(NotificationUtils.PREFS_KEY, true))
+            return;
+
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(preferences);
+        String timeout = timeoutManager.get(timeoutManager.getCurrentIndex()).getLonghand(context.getResources());
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationUtils.CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(String.format(context.getString(R.string.notification_content), timeout))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        manager.notify(NotificationUtils.TIMEOUT_NID, builder.build());
+    }
+
     @Override
     public void onStartListening() {
         Tile tile = getQsTile();
@@ -69,6 +95,8 @@ public class TimeoutTileService extends TileService {
             updateTile(tile, null, true);
         else
             updateTile(tile, timeoutManager.get(i), false);
+
+        NotificationUtils.createNotificationChannel(this);
     }
 
     @Override
@@ -100,7 +128,7 @@ public class TimeoutTileService extends TileService {
         timeoutManager.next();
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(() -> {
-            // Notification
+            sendNotification(this);
             timeoutManager.save();
         }, 500);
     }

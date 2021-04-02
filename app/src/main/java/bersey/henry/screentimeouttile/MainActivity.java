@@ -1,6 +1,7 @@
 package bersey.henry.screentimeouttile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import bersey.henry.screentimeouttile.utils.NotificationUtils;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(preferences);
 
         Spinner languageSpinner = findViewById(R.id.languageSpinner);
         List<String> languages = Arrays.stream(
@@ -60,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Switch notificationSwitch = findViewById(R.id.notificationSwitch);
+        notificationSwitch.setChecked(preferences.getBoolean(NotificationUtils.PREFS_KEY, true));
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                preferences.edit().putBoolean(NotificationUtils.PREFS_KEY, isChecked).apply());
     }
 
     @Override
