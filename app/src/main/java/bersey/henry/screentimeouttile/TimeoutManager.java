@@ -1,37 +1,68 @@
 package bersey.henry.screentimeouttile;
 
-import android.content.ContentResolver;
-import android.provider.Settings;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TimeoutManager {
+
+    private static final String PREFS_KEY = "timeout_manager";
+    private static final char DELIMITER = ';';
+    private static final String DEFAULT_MANAGER_STATE = "1;0;015;030;11;12;15;110;";
 
     private static TimeoutManager INSTANCE;
 
     @SuppressWarnings("InstantiationOfUtilityClass")
-    public static TimeoutManager getInstance() {
+    public static TimeoutManager getInstance(SharedPreferences sharedPreferences) {
         if (INSTANCE == null)
-            INSTANCE = new TimeoutManager();
+            INSTANCE = load(sharedPreferences);
         return INSTANCE;
     }
 
 
-    private ArrayList<Timeout> timeouts;
-    private int currentIndex;
     private boolean neverEnabled;
+    private int currentIndex;
+    private ArrayList<Timeout> timeouts;
+    private final SharedPreferences sharedPreferences;
 
-    // REPLACE ME!
-    private TimeoutManager() {
-        this.timeouts = new ArrayList<>(Arrays.asList(
-                new Timeout(30, Timeout.Unit.SECONDS),
-                new Timeout(60, Timeout.Unit.SECONDS),
-                new Timeout(2, Timeout.Unit.MINUTE)
-        ));
-        this.currentIndex = 0;
-        this.neverEnabled = true;
+    // 1st: neverEnabled
+    // 2nd: currentIndex
+    // rest: timeouts (1st char: index of unit; rest: amount)
+
+    public void save() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(neverEnabled ? '1' : '0');
+        builder.append(DELIMITER);
+        builder.append(currentIndex);
+        builder.append(DELIMITER);
+        timeouts.forEach(timeout -> {
+            builder.append(timeout.toString());
+            builder.append(DELIMITER);
+        });
+
+        String data = builder.toString();
+        sharedPreferences.edit().putString(PREFS_KEY, data).apply();
+    }
+
+    private static TimeoutManager load(SharedPreferences sharedPreferences) {
+        List<String> data = Arrays.stream(sharedPreferences.getString(PREFS_KEY, DEFAULT_MANAGER_STATE).split(String.valueOf(DELIMITER))).collect(Collectors.toList());
+
+        boolean neverEnabled = data.get(0).equals("1");
+        int currentIndex = Integer.parseInt(data.get(1));
+        ArrayList<Timeout> timeouts = data.subList(2, data.size()).stream().map(Timeout::fromString).collect(Collectors.toCollection(ArrayList::new));
+
+        return new TimeoutManager(neverEnabled, currentIndex, timeouts, sharedPreferences);
+    }
+
+    private TimeoutManager(boolean neverEnabled, int currentIndex, ArrayList<Timeout> timeouts, SharedPreferences sharedPreferences) {
+        this.neverEnabled = neverEnabled;
+        this.currentIndex = currentIndex;
+        this.timeouts = timeouts;
+        this.sharedPreferences = sharedPreferences;
     }
 
 
@@ -41,7 +72,10 @@ public class TimeoutManager {
         return currentIndex + 1;
     }
 
+    // Temporary fix to deletion issues.
     public int getCurrentIndex() {
+        if (currentIndex > timeouts.size() - (neverEnabled ? 0 : 1))
+            return timeouts.size() - (neverEnabled ? 0 : 1);
         return currentIndex;
     }
 

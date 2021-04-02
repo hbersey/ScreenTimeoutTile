@@ -1,23 +1,27 @@
 package bersey.henry.screentimeouttile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Icon;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.util.Log;
 
 public class TimeoutTileService extends TileService {
 
     private static final int TEXT_COLOUR = Color.BLACK;
     private static final float TEXT_SIZE = 64f;
 
-    public TimeoutTileService() {
+    private final Handler handler;
 
+    public TimeoutTileService() {
+        handler = new Handler();
     }
 
     private static Icon generateIcon(String text) {
@@ -60,7 +64,7 @@ public class TimeoutTileService extends TileService {
         if (tile == null)
             return;
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
         int i = timeoutManager.getCurrentIndex();
         if (timeoutManager.isNeverEnabled() && i == timeoutManager.getTimeouts().size())
             updateTile(tile, null, true);
@@ -81,7 +85,7 @@ public class TimeoutTileService extends TileService {
             return;
         }
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
         int next = timeoutManager.getNextIndex();
         boolean isNever = timeoutManager.isNeverEnabled() && next == timeoutManager.getTimeouts().size();
 
@@ -95,6 +99,10 @@ public class TimeoutTileService extends TileService {
         }
 
         timeoutManager.next();
-
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(() -> {
+            // Notification
+            timeoutManager.save();
+        }, 500);
     }
 }

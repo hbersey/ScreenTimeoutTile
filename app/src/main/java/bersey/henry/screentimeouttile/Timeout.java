@@ -2,7 +2,10 @@ package bersey.henry.screentimeouttile;
 
 import android.content.res.Resources;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.Arrays;
 
 public class Timeout {
     private int amount;
@@ -77,5 +80,17 @@ public class Timeout {
         Timeout other = (Timeout) obj;
 
         return other.getMS() == getMS();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.valueOf(Arrays.asList(Unit.values()).indexOf(unit)) + getAmount();
+    }
+
+    public static Timeout fromString(String string) {
+        int unitIndex = Integer.parseInt(string.substring(0, 1));
+        int amount = Integer.parseInt(string.substring(1));
+        return new Timeout(amount,Unit.values()[unitIndex]);
     }
 }

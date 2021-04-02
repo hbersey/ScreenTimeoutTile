@@ -1,5 +1,6 @@
 package bersey.henry.screentimeouttile;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecyclerAdapter.ViewHolder> {
     private final TimeoutManager timeoutManager;
 
-    public TimeoutsRecyclerAdapter() {
-        timeoutManager = TimeoutManager.getInstance();
+    public TimeoutsRecyclerAdapter(TimeoutManager timeoutManager) {
+        this.timeoutManager = timeoutManager;
     }
 
     @NonNull
@@ -47,7 +48,6 @@ public class TimeoutsRecyclerAdapter extends RecyclerView.Adapter<TimeoutsRecycl
 
     @Override
     public int getItemCount() {
-        TimeoutManager timeoutManager = TimeoutManager.getInstance();
         return timeoutManager.getTimeouts().size() + 1;
     }
 

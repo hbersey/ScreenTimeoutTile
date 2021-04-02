@@ -1,7 +1,9 @@
 package bersey.henry.screentimeouttile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TimeoutManager timeoutManager = TimeoutManager.getInstance();
+        TimeoutManager timeoutManager = TimeoutManager.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
 
         Spinner languageSpinner = findViewById(R.id.languageSpinner);
         List<String> languages = Arrays.stream(
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         languageSpinner.setAdapter(languageSpinnerAdapter);
 
         RecyclerView timeoutsRecyclerView = findViewById(R.id.timeoutsRecyclerView);
-        TimeoutsRecyclerAdapter timeoutsRecyclerAdapter = new TimeoutsRecyclerAdapter();
+        TimeoutsRecyclerAdapter timeoutsRecyclerAdapter = new TimeoutsRecyclerAdapter(timeoutManager);
         timeoutsRecyclerView.setAdapter(timeoutsRecyclerAdapter);
         timeoutsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
