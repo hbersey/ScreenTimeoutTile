@@ -1,12 +1,11 @@
 package bersey.henry.screentimeouttile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

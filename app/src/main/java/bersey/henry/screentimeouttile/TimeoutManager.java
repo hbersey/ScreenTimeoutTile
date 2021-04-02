@@ -1,10 +1,8 @@
 package bersey.henry.screentimeouttile;
 
 import android.content.SharedPreferences;
-import android.os.Debug;
 import android.util.Log;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

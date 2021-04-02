@@ -1,12 +1,10 @@
 package bersey.henry.screentimeouttile;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
