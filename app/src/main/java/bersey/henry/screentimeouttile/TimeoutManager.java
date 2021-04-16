@@ -108,10 +108,17 @@ public class TimeoutManager {
 
     public int remove(Timeout timeout) {
         int i = timeouts.indexOf(timeout);
-
         timeouts.remove(i);
-        if (i <= currentIndex && i > 0)
+
+        if (i <= currentIndex)
             currentIndex--;
+
+        if (currentIndex > (timeouts.size() - (neverEnabled ? 0 : 1)))
+            currentIndex = (timeouts.size() - (neverEnabled ? 0 : 1));
+        else if (currentIndex < 0)
+            currentIndex = 0;
+
+        save();
 
         return i;
     }
