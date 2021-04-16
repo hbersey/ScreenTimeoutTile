@@ -109,10 +109,8 @@ public class TimeoutManager {
     public int remove(Timeout timeout) {
         int i = timeouts.indexOf(timeout);
 
-        Log.d("REMOVE AT", String.valueOf(i));
-
         timeouts.remove(i);
-        if (i <= currentIndex)
+        if (i <= currentIndex && i > 0)
             currentIndex--;
 
         return i;
