@@ -14,6 +14,7 @@
     <string name="notification_title">Timeout Changed</string>
     <string name="notification_content">Your screen timeout is now %s.</string>
 
+    <string name="grant_permissions">Grant Permissions</string>
     <string name="language">Language:</string>
     <string name="auto">auto</string>
     <string name="presets">Presets:</string>

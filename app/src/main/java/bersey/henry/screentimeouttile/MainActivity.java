@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -30,8 +32,16 @@ import static bersey.henry.screentimeouttile.utils.LocaleUtils.setLanguage;
 import static bersey.henry.screentimeouttile.utils.LocaleUtils.updateLanguage;
 
 public class MainActivity extends AppCompatActivity {
+    Button permissionsButton;
 
     boolean languageSpinnerLoaded;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        permissionsButton.setVisibility(Settings.System.canWrite(this) ? View.GONE : View.VISIBLE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
         updateLanguage(preferences, this);
 
         setContentView(R.layout.activity_main);
+
+        permissionsButton = findViewById(R.id.permissionsButton);
+        permissionsButton.setOnClickListener((view) -> {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        });
 
         Spinner languageSpinner = findViewById(R.id.languageSpinner);
         List<String> languages = Arrays.stream(
