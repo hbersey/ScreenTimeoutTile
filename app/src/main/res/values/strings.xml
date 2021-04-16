@@ -19,6 +19,7 @@
     <string name="auto">auto</string>
     <string name="presets">Presets:</string>
     <string name="new_">New</string>
+    <string name="range_error">Must be between 1 and %d.</string>
     <string name="other">Other:</string>
     <string name="notifications">Notifications</string>
 

@@ -48,18 +48,20 @@ public class Timeout {
 
 
     enum Unit {
-        SECONDS(1000, R.string.seconds_short, R.string.seconds_long),
-        MINUTE(60000, R.string.minutes_short, R.string.minutes_long),
-        HOUR(3600000, R.string.hours_short, R.string.hours_long);
+        SECONDS(1000, R.string.seconds_short, R.string.seconds_long, 59),
+        MINUTE(60000, R.string.minutes_short, R.string.minutes_long, 59),
+        HOUR(3600000, R.string.hours_short, R.string.hours_long, 24);
 
         private final int ms;
         private final int shorthand;
         private final int longhand;
+        private final int max;
 
-        Unit(int ms, int shorthand, int longhand) {
+        Unit(int ms, int shorthand, int longhand, int max) {
             this.ms = ms;
             this.shorthand = shorthand;
             this.longhand = longhand;
+            this.max = max;
         }
 
         public String getShorthand(Resources res) {
@@ -69,6 +71,10 @@ public class Timeout {
 
         public String getLonghand(Resources res) {
             return res.getString(longhand);
+        }
+
+        public int getMax() {
+            return max;
         }
     }
 

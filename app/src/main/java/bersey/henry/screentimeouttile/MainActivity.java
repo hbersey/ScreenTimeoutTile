@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +36,8 @@ import static bersey.henry.screentimeouttile.utils.LocaleUtils.updateLanguage;
 
 public class MainActivity extends AppCompatActivity {
     Button permissionsButton;
+    Spinner newUnitSpinner;
+    ImageButton newButton;
 
     boolean languageSpinnerLoaded;
 
@@ -98,13 +103,40 @@ public class MainActivity extends AppCompatActivity {
         timeoutsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         EditText newTimeoutEditText = findViewById(R.id.newTimeoutAmount);
+        newTimeoutEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        Spinner newUnitSpinner = findViewById(R.id.newTimeoutUnitSpinner);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0)
+                    return;
+
+                Timeout.Unit unit = Timeout.Unit.values()[newUnitSpinner.getSelectedItemPosition()];
+                int n = Integer.parseInt(s.toString());
+                if (n < 1 || n > unit.getMax()) {
+                    newTimeoutEditText.setError(String.format(getString(R.string.range_error), unit.getMax()));
+                    newButton.setEnabled(false);
+                } else {
+                    newTimeoutEditText.setError(null);
+                    newButton.setEnabled(true);
+                }
+            }
+        });
+
+        newUnitSpinner = findViewById(R.id.newTimeoutUnitSpinner);
         List<String> units = Arrays.stream(Timeout.Unit.values()).map(unit -> unit.getShorthand(getResources())).collect(Collectors.toList());
         ArrayAdapter<String> newUnitAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, units);
         newUnitSpinner.setAdapter(newUnitAdapter);
 
-        ImageButton newButton = findViewById(R.id.newTimeoutButton);
+        newButton = findViewById(R.id.newTimeoutButton);
         newButton.setOnClickListener(v -> {
             int amount = Integer.parseInt(newTimeoutEditText.getText().toString());
             Timeout.Unit unit = Timeout.Unit.values()[newUnitSpinner.getSelectedItemPosition()];
@@ -114,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 timeoutsRecyclerAdapter.notifyItemInserted(i);
             }
         });
+        newButton.setEnabled(false);
 
         Switch notificationSwitch = findViewById(R.id.notificationSwitch);
         notificationSwitch.setChecked(preferences.getBoolean(NotificationUtils.PREFS_KEY, true));
